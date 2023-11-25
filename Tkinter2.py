@@ -4,41 +4,42 @@ import sqlite3
 
 # Fungsi untuk membuat tabel jika belum ada
 def create_table():
-    connection = sqlite3.connec('Tkinter2.db')
+    connection = sqlite3.connect('Tkinter.db')
     cursor = connection.cursor()
     cursor.execute('''CREATE TABLE IF NOT EXISTS nilai (
                    id INTEGER PRIMARY KEY ,
-                   siswa TEXT ,
+                   nama_siswa TEXT ,
                    biologi INTEGER ,
                    fisika INTEGER ,
-                   inggris INTEGER
+                   inggris INTEGER,
+                   prediksi_fakultas TEXT
                 )''')
     connection.commit()
     connection.close()
 
 # Fungsi untuk memasukkan data ke dalam database
 def insert_data():
-    siswa = entry_nama.get()
-    biologi = int(entry_biologi.get())
-    fisika = int(entry_fisika.get())
-    inggris = int(entry_inggris.get())
+    nama_siswa = entry_nama.get()
+    nilai_biologi = int(entry_biologi.get())
+    nilai_fisika = int(entry_fisika.get())
+    nilai_inggris = int(entry_inggris.get())
 
     # Mencari nilai tertinggi dan menentukan prediksi fakultas"
-    max_nilai = max(entry_biologi, entry_fisika, entry_inggris)
+    max_nilai = max(nilai_biologi, nilai_fisika, nilai_inggris)
     prediksi = ""
-    if max_nilai == entry_biologi:
+    if max_nilai == nilai_biologi:
         prediksi = "kedokteran"
-    elif max_nilai == entry_fisika:
+    elif max_nilai == nilai_fisika:
         prediksi = "Teknik"
-    elif max_nilai == entry_inggris:
+    elif max_nilai == nilai_inggris:
         prediksi = "Bahasa"
 
     hasil.config(text=f"Hasil Prediksi: {prediksi}")
 
-    connection = sqlite3.connect('Tkinter2.db')
+    connection = sqlite3.connect('Tkinter.db')
     cursor = connection.cursor()
-    cursor.execute('''INSERT INTO nilai (siswa, biologi, fisika, inggris)
-                       VALUES (?, ?, ?, ?) ''', (siswa, biologi, fisika, inggris))
+    cursor.execute('''INSERT INTO nilai_siswa (nama_siswa, biologi, fisika, inggris, prediksi_fakultas)
+                       VALUES (?, ?, ?, ?) ''', (nama_siswa, nilai_biologi, nilai_fisika, nilai_inggris,prediksi))
     connection.commit()
     connection.close()
 
@@ -80,7 +81,7 @@ entry_inggris.pack()
 button_simpan = tk.Button(root, text="Simpan", command=simpan_data)
 button_simpan.pack()
 
-hasil = tk.Label(root, text="Hasil Prediksi: Bahasa")
+hasil = tk.Label(root, text="Hasil Prediksi:")
 hasil.pack()
 
 root.mainloop()
